@@ -33,20 +33,6 @@ default=(
 )
 sketchybar --default "${default[@]}"
 
-sketchybar --add event aerospace_workspace_change
-
-for sid in $(aerospace list-workspaces --all); do
-    sketchybar --add item space.$sid left \
-        --subscribe space.$sid aerospace_workspace_change \
-        --set space.$sid \
-        background.color=0x00 \
-        background.height=20 \
-        background.drawing=off \
-        label="$sid" \
-        click_script="aerospace workspace $sid" \
-        script="$CONFIG_DIR/plugins/aerospace.sh $sid"
-done
-
 separator=(
   icon="|"
   icon.font="JetBrains Mono:Regular:14.0"
@@ -57,13 +43,9 @@ separator=(
 )
 
 ##### Adding Left Items #####
-# We add some regular items to the left side of the bar, where
-# only the properties deviating from the current defaults need to be set
 
-sketchybar --add item chevron left \
-           --set chevron icon="|" label.drawing=off padding_left=10 padding_right=10 \
-           --add item front_app left \
-           --set front_app icon.drawing=off script="$PLUGIN_DIR/front_app.sh" \
+sketchybar --add item front_app left \
+           --set front_app icon.drawing=off padding_left=10 script="$PLUGIN_DIR/front_app.sh" \
            --subscribe front_app front_app_switched
 
 ##### Adding Right Items #####
@@ -100,12 +82,6 @@ sketchybar --add item clock right \
            \
            --add item keyboard right \
            --set keyboard update_freq=2 script="$PLUGIN_DIR/keyboard_layout.sh" \
-           \
-           --add item sep4 right \
-           --set sep4 "${separator[@]}" \
-           \
-           --add item weather right \
-           --set weather update_freq=1800 script="$PLUGIN_DIR/weather.sh" \
            \
 
 ##### Force all scripts to run the first time (never do this in a script) #####
