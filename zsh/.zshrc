@@ -92,7 +92,6 @@ plugins=(
   npm
   yarn
   golang
-  rust
 
   # Productivity Boosters
   sudo              # Press ESC twice to add sudo to previous command
@@ -141,22 +140,33 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # JankyBorders : window borders
-alias jankyon="pkill -f borders; brew services restart borders && sleep 1 && borders active_color=0x009A0083 inactive_color=0x00ffffff width=5.0 style=round > /dev/null 2>&1 &"
-alias jankyoff="pkill -f borders && brew services stop borders"
+# Styling is owned by ~/.config/aerospace/scripts/update-borders.sh — never duplicate colors here
+alias jankyon="brew services start borders && ~/.config/aerospace/scripts/update-borders.sh"
+alias jankyoff="brew services stop borders"
 
 # Restart everything
-alias rsa="brew services restart sketchybar && killall AeroSpace && sleep 2 && open -a AeroSpace"
+alias rsa="brew services restart sketchybar; killall AeroSpace 2>/dev/null; sleep 2; open -a AeroSpace"
 
 alias c="clear"
 
-export PATH="/opt/homebrew/opt/python@3.13/libexec/bin:$PATH"
-export PATH=/opt/homebrew/opt/python@3.13/libexec/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/usr/local/go/bin:/Users/rs/go/bin
+# PATH is built in ~/.zprofile (brew shellenv + composable prepends)
 
-export NVM_DIR="$HOME/.nvm"
-    [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm
-    [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
-
-# Load Angular CLI autocompletion.
-source <(ng completion script)
+# Load Angular CLI autocompletion (cached — `ng completion script` costs ~240ms per shell)
+if command -v ng >/dev/null; then
+  _ng_comp="$HOME/.cache/ng-completion.zsh"
+  if [[ ! -r "$_ng_comp" || "$(command -v ng)" -nt "$_ng_comp" ]]; then
+    mkdir -p "$HOME/.cache" && ng completion script > "$_ng_comp"
+  fi
+  source "$_ng_comp"
+  unset _ng_comp
+fi
 
 export GPG_TTY=$(tty)
+export PATH="$HOME/.local/bin:$PATH"
+
+export NVM_DIR="$HOME/.nvm"
+_nvm_prefix="${HOMEBREW_PREFIX:-/opt/homebrew}/opt/nvm"
+[ -s "$_nvm_prefix/nvm.sh" ] && \. "$_nvm_prefix/nvm.sh"
+[ -s "$_nvm_prefix/etc/bash_completion.d/nvm" ] && \. "$_nvm_prefix/etc/bash_completion.d/nvm"
+unset _nvm_prefix
+
