@@ -1,9 +1,5 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroUI provides the basis for configuring the AstroNvim User Interface
 -- Configuration documentation can be found with `:h astroui`
--- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
---       as this provides autocomplete and documentation while editing
 
 ---@type LazySpec
 return {
@@ -12,14 +8,26 @@ return {
   opts = {
     -- change colorscheme
     colorscheme = "astrodark",
-    -- AstroUI allows you to easily modify highlight groups easily for any and all colorschemes
     highlights = {
-      init = { -- this table overrides highlights in all themes
-        -- Normal = { bg = "#000000" },
-      },
-      astrodark = { -- a table of overrides/changes when applying the astrotheme theme
-        -- Normal = { bg = "#000000" },
-      },
+      -- Transparent background for all colorschemes. Function form + get_hlgroup
+      -- keeps each group's other attributes (AstroUI replaces groups wholesale,
+      -- so a bare `{ bg = "NONE" }` would wipe foregrounds).
+      init = function()
+        local get_hlgroup = require("astroui").get_hlgroup
+        local function clear_bg(name)
+          local hl = get_hlgroup(name)
+          hl.bg, hl.ctermbg = "NONE", "NONE"
+          return hl
+        end
+        return {
+          Normal = clear_bg "Normal",
+          NormalNC = clear_bg "NormalNC",
+          NormalFloat = clear_bg "NormalFloat",
+          FloatBorder = clear_bg "FloatBorder",
+          NeoTreeNormal = clear_bg "NeoTreeNormal",
+          NeoTreeNormalNC = clear_bg "NeoTreeNormalNC",
+        }
+      end,
     },
     -- Icons can be configured throughout the interface
     icons = {
