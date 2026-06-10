@@ -2,3 +2,5 @@
 automatic_backups/
 *.bak
 .claude/
+# ...but the claude stow package is tracked content, not runtime noise
+!claude/.claude/

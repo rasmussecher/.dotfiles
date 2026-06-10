@@ -58,9 +58,10 @@
       "Bash(ssh workorder:*)"
     ]
   },
+  "model": "claude-fable-5[1m]",
   "statusLine": {
     "type": "command",
-    "command": "bash /Users/rs/.claude/statusline-command.sh",
+    "command": "bash ~/.claude/statusline-command.sh",
     "refreshInterval": 5
   },
   "enabledPlugins": {
@@ -72,6 +73,5 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
   "preferredNotifChannel": "ghostty",
-  "skipAutoPermissionPrompt": true,
-  "model": "claude-fable-5[1m]"
+  "skipAutoPermissionPrompt": true
 }
