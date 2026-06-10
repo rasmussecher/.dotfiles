@@ -11,7 +11,8 @@ COUNT=$(aerospace list-windows --workspace focused --count 2>/dev/null)
 [ -z "$COUNT" ] && exit 0
 
 if [ "$COUNT" -gt 1 ]; then
-  borders active_color=0xFFFF9F0A inactive_color=0x00 width=4.0
+  # Light blue from the btop adapta theme box outlines (#00bcd4)
+  borders active_color=0xFF00BCD4 inactive_color=0x00 width=4.0
 else
   borders active_color=0x00000000 inactive_color=0x00 width=4.0
 fi
